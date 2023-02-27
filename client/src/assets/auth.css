@@ -1,0 +1,7 @@
+.Auth {
+  min-height: 100vh;
+}
+
+.Auth input {
+  height: 45px;
+}

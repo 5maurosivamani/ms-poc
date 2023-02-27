@@ -1,0 +1,7 @@
+event-bus/node_modules/
+client/node_modules/
+login/node_modules/
+moderation/node_modules/
+query/node_modules/
+register/node_modules/
+users/node_modules/
