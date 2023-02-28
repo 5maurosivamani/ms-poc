@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "../assets/register.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 const host = "192.168.1.13";
 
 function Register() {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -26,11 +28,14 @@ function Register() {
         .then((res) => {
           console.log(res.data);
           alert("Successfully Created!");
+
           setFormData({
             name: "",
             email: "",
             password: "",
           });
+
+          navigate("/login");
         })
         .catch((err) => {
           console.log("Axios Error", err);
@@ -42,7 +47,7 @@ function Register() {
 
   return (
     <div className="Auth d-flex  align-items-center h-100 container-fluid mh-100 w-100 bg-dark">
-      <div className="col-md-6 mx-auto">
+      <div className="col-md-5 mx-auto">
         <form className="w-100" autoComplete="off">
           <h1 className="text-light text-center">Register</h1>
           <div class="form-group mb-4">
@@ -92,7 +97,7 @@ function Register() {
             <button
               type="submit"
               onClick={handleSubmit}
-              class="btn btn-primary w-50 mx-auto "
+              class="btn btn-info px-5 mx-auto text-white "
             >
               Submit
             </button>
@@ -100,7 +105,10 @@ function Register() {
 
           <div className="w-100 text-center my-4">
             <p className="text-muted ">
-              Already have an accout? <Link to="/login">Login</Link>
+              Already have an accout?{" "}
+              <Link to="/login" className="text-info ">
+                Login
+              </Link>
             </p>
           </div>
         </form>

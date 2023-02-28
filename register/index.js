@@ -17,7 +17,7 @@ const dbcon = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "register_db",
+  database: "users_db",
   connectionLimit: 10,
 });
 
@@ -29,6 +29,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.get("/", (req, res) => {
   res.send("Register!");
 });
+
 
 // Define a route for handling POST requests to register a new user
 app.post("/register", (req, res, next) => {
@@ -51,10 +52,32 @@ app.post("/register", (req, res, next) => {
         return res.status(500).send("Something went wrong!");
       }
 
+      axios.post("http://localhost:5000/events", {
+        type: "UserRegisterd",
+        data: {
+          insertId: results.insertId,
+          name,
+          email,
+          password,
+        },
+      });
+
       // Send a success response
       res.status(201).json({ message: "User registered successfully" });
     }
   );
+});
+
+// Receive Events
+app.post("/events", (req, res) => {
+  const { type, data } = req.body;
+
+  console.log("Event Received", type);
+});
+
+// Define a route for handling GET requests to the root URL
+app.get("*", (req, res) => {
+  res.status(404).send("Page not found");
 });
 
 // Define an error-handling middleware function to handle errors

@@ -5,8 +5,8 @@ const bodyParser = require("body-parser");
 const PORT = 4001;
 const mysql = require("mysql2");
 const cors = require("cors");
-const secretKey = 'mysecretkey';
-const jwt = require('jsonwebtoken');
+const secretKey = "mysecretkey";
+const jwt = require("jsonwebtoken");
 
 // Create a new instance of Express
 const app = express();
@@ -19,7 +19,7 @@ const dbcon = mysql.createPool({
   host: "localhost",
   user: "root",
   password: "",
-  database: "register_db",
+  database: "login_db",
   connectionLimit: 10,
 });
 
@@ -75,13 +75,40 @@ app.post("/login", (req, res) => {
 
         // Create a JWT and send it in the response
         const token = jwt.sign(payload, secretKey);
-        res.json({ token, message: "Login successful." });
+        res.json({ token,name:user.name, message: "Login successful." });
       } catch (err) {
         res.status(500).json({ message: "Error creating token." });
       }
-
     });
   });
+});
+
+// Receive Events
+app.post("/events", (req, res) => {
+  const { type, data } = req.body;
+
+  if (type === "UserRegisterd") {
+    const { insertId, name, email, password } = data;
+
+    // Insert new user data into the login database
+    dbcon.execute(
+      "INSERT INTO users_tb (id, name, email, password) VALUES (?, ?, ?, ?)",
+      [insertId, name, email, password],
+      (err, results) => {
+        if (err) {
+          console.error(err.stack);
+          return res.status(500).send("Something went wrong!");
+        }
+
+        return res.status(201).send("Successfully Stored in login db!");
+      }
+    );
+  }
+});
+
+// Define a route for handling GET requests to the root URL
+app.get("*", (req, res) => {
+  res.status(404).send("Page not found");
 });
 
 // Define an error-handling middleware function to handle errors

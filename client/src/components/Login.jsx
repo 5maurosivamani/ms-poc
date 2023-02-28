@@ -32,6 +32,7 @@ function Login() {
           const token = res.data.token;
 
           localStorage.setItem("auth_token", token);
+          localStorage.setItem("username", res.data.name);
 
           setFormData({
             name: "",
@@ -58,7 +59,7 @@ function Login() {
 
   return (
     <div className="Auth d-flex  align-items-center h-100 container-fluid mh-100 w-100 bg-dark">
-      <div className="col-md-6 mx-auto">
+      <div className="col-md-5 mx-auto">
         <form className="w-100" autoComplete="off">
           <h1 className="text-light text-center">Login</h1>
 
@@ -97,7 +98,7 @@ function Login() {
             <button
               type="submit"
               onClick={handleSubmit}
-              class="btn btn-primary w-50 mx-auto "
+              class="btn btn-info text-white px-5 mx-auto "
             >
               Submit
             </button>
@@ -105,7 +106,7 @@ function Login() {
 
           <div className="w-100 text-center my-4">
             <p className="text-muted ">
-              You have don't an accout? <Link to="/register">Register</Link>
+              You have don't an accout? <Link to="/register" className="text-info">Register</Link>
             </p>
           </div>
         </form>
