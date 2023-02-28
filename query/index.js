@@ -57,7 +57,7 @@ app.get("/users", (req, res) => {
 app.post("/events", (req, res) => {
   const { type, data } = req.body;
 
-  if (type === "UserRegisterd") {
+  if (type === "UserRegistered") {
     const { insertId, name, email, password } = data;
 
     // Insert new user data into the query database
@@ -76,6 +76,8 @@ app.post("/events", (req, res) => {
   }
 });
 
+
+
 // Define a route for handling GET requests to the root URL
 app.get("*", (req, res) => {
   res.status(404).send("Page not found");
@@ -86,6 +88,31 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send("Something went wrong!");
 });
+
+// fetch all events and store db
+axios
+  .get("http://localhost:5000/events")
+  .then((res) => {
+    const events = res.data;
+
+    events.forEach(async ({ type, data }) => {
+      if (type === "UserRegistered") {
+        const { insertId, name, email, password } = await JSON.parse(data);
+
+        // Insert new user data into the login database
+        dbcon.execute(
+          "INSERT INTO users_tb (id, name, email, password) VALUES (?, ?, ?, ?)",
+          [insertId, name, email, password],
+          (err, results) => {
+            if (err) {
+              console.error(err.stack);
+            }
+          }
+        );
+      }
+    });
+  })
+  .catch((err) => console.log(err));
 
 // Start the server on port from const PORT
 app.listen(PORT, () => {

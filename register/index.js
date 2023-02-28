@@ -53,7 +53,7 @@ app.post("/register", (req, res, next) => {
       }
 
       axios.post("http://localhost:5000/events", {
-        type: "UserRegisterd",
+        type: "UserRegistered",
         data: {
           insertId: results.insertId,
           name,
